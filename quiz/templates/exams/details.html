@@ -18,32 +18,32 @@
                 <tbody>
 
                 <tr>
-                    <td>Описание</td>
+                    <td>Description</td>
                     <td>{{ exam.description }}</td>
                 </tr>
 
                 <tr>
-                    <td>Кол-во вопросов</td>
+                    <td>Question number</td>
                     <td>{{ exam.questions_count }}</td>
                 </tr>
 
                 <tr>
-                    <td>Кол-во запусков</td>
+                    <td>Attempts number</td>
                     <td>{{ exam.results.count }}</td>
                 </tr>
 
                 <tr>
-                    <td>Лучший результат</td>
+                    <td>Best result</td>
                     <td>N/A</td>
                 </tr>
 
                 <tr>
-                    <td>Кто получил лучший результат</td>
+                    <td>Top result</td>
                     <td>N/A</td>
                 </tr>
 
                 <tr>
-                    <td>Последний запуск</td>
+                    <td>Last attempt</td>
                     <td>N/A</td>
                 </tr>
 
@@ -56,8 +56,8 @@
         <form action="{% url 'quizzes:result_create' exam.uuid %}" method="post"
               class="d-flex justify-content-center mt-5 mb-2">
             {% csrf_token %}
-            <input class="btn btn-success m-3" type="submit" value="START">
-            <a class="btn btn-primary m-3" href="{% url 'quizzes:list' %}">Вернуться к списку тестов</a>
+            <input class="btn btn-success m-3" type="submit" value="Start">
+            <a class="btn btn-primary m-3" href="{% url 'quizzes:list' %}">Back to exam lists</a>
         </form>
     </div>
 
@@ -67,10 +67,10 @@
 
         <tr>
             <th></th>
-            <th>Дата старта</th>
-            <th>Баллы</th>
-            <th>Статус</th>
-            <th>Действие</th>
+            <th>Start data</th>
+            <th>Points</th>
+            <th>Status</th>
+            <th>Action</th>
         </tr>
 
         {% for result in object_list %}
@@ -82,13 +82,13 @@
             <td>
                 {% if result.state == result.STATE.NEW %}
 
-                <a class="btn btn-warning" href="{% url 'quizzes:result_update' exam.uuid result.uuid %}">Продолжить</a>
-                <a class="btn btn-danger" href="#">Удалить</a>
+                <a class="btn btn-warning" href="{% url 'quizzes:result_update' exam.uuid result.uuid %}">Continue</a>
+                <a class="btn btn-danger" href="#">Delete</a>
 
                 {% else %}
 
                 <a class="btn btn-success"
-                   href="{% url 'quizzes:result_details' exam.uuid result.uuid %}">Посмотреть</a>
+                   href="{% url 'quizzes:result_details' exam.uuid result.uuid %}">Watch</a>
 
                 {% endif %}
             </td>

@@ -16,7 +16,7 @@ from .utils import signer
 class AccountRegistrationView(CreateView):
     model = get_user_model()
     template_name = 'accounts/registration.html'
-    success_url = reverse_lazy('accounts:registration_done')
+    success_url = reverse_lazy('accounts:login')
     form_class = AccountRegistrationForm
 
 
@@ -44,6 +44,9 @@ def user_activate(request, sign):
 
 class AccountLoginView(LoginView):
     template_name = 'accounts/login.html'
+
+    # def post(self, request, *args, **kwargs):
+    #     return super().post(request, *args, **kwargs)
 
     def get_redirect_url(self):
         next_url = self.request.GET.get('next')

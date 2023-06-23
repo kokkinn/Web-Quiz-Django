@@ -4,12 +4,6 @@ from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UserChangeForm
 from django.core.exceptions import ValidationError
 
-# from .utils import send_activation_notification
-
-# from .apps import user_registered
-from .apps import user_registered
-from .utils import send_activation_notification
-
 
 class AccountRegistrationForm(forms.ModelForm):
     email = forms.EmailField(label='Email')
@@ -26,33 +20,28 @@ class AccountRegistrationForm(forms.ModelForm):
 
     def clean_password1(self):
         pwd = self.cleaned_data['password1']
-        if pwd:
-            password_validation.validate_password(pwd)
-
-        return pwd
+        password_validation.validate_password(pwd)
+        return self.cleaned_data['password1']
 
     def clean(self):
         super().clean()
-        pwd1 = self.cleaned_data['password1']
-        pwd2 = self.cleaned_data['password2']
+        pwd1 = self.cleaned_data.get('password1')
+        pwd2 = self.cleaned_data.get('password2')
+        print(pwd1, pwd2)
         if pwd1 and pwd2 and pwd1 != pwd2:
             raise ValidationError(
                 {
                     'password2': ValidationError('Password not equals', code='password_mismatch')
                 }
             )
+        return self.cleaned_data
 
     def save(self, commit=True):
-        user = super().save(commit=False)
+        user = super().save()
         user.set_password(self.cleaned_data['password1'])
-        user.is_active = False
-        user.is_activated = False
-        if commit:
-            user.save()
-
-        # send_activation_notification(user)
-        user_registered.send(AccountRegistrationForm, instance=user)
-
+        user.is_active = True
+        user.is_activated = True
+        user.save()
         return user
 
     class Meta:
@@ -66,7 +55,6 @@ class AccountRegistrationForm(forms.ModelForm):
 
 
 class AccountUpdateForm(UserChangeForm):
-
     class Meta:
         model = get_user_model()
         fields = [
